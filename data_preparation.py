@@ -42,6 +42,18 @@ def data_scaling(lines):
     return array
 
 
-def float_converter(value):
-    return float(value)
+def splitting_into_training_and_test(array):
+    training_data = np.empty((0, 9))
+    test_data = np.empty((0, 9))
+    split_arrays = np.array_split(array, 4)
+    for i in range(4):
+        np.random.shuffle(split_arrays[i])
+        total_rows = split_arrays[i].shape[0]
+        train_rows = int(0.8 * total_rows)
+        training_data = np.concatenate((training_data, split_arrays[i][:train_rows]), axis=0)
+        test_data = np.concatenate((test_data, split_arrays[i][train_rows:]), axis=0)
 
+    np.random.shuffle(training_data)
+    np.random.shuffle(test_data)
+
+    return training_data, test_data
