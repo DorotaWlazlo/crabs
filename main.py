@@ -1,10 +1,10 @@
-from data_preparation import load_file, class_convertion, data_scaling, splitting_into_training_and_test
+from data_preparation import load_file, class_conversion, data_scaling, splitting_into_training_and_test
 from histogram_generation import generate_all_histograms
 
 
 def main():
     lines = load_file('crabs.dat')
-    lines_converted = class_convertion(lines)
+    lines_converted = class_conversion(lines)
     data_array = data_scaling(lines_converted)
     print(data_array[100])
     print(data_array.shape)

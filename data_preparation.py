@@ -9,7 +9,7 @@ def load_file(file_name):
     return lines
 
 
-def class_convertion(lines):
+def class_conversion(lines):
     i = 0
     for line in lines:
         if line[0] == 'B' and line[2] == 'M':
