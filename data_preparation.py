@@ -10,6 +10,7 @@ def load_file(file_name):
 
 
 def class_conversion(lines):
+    lines = lines[1:]
     i = 0
     for line in lines:
         if line[0] == 'B' and line[2] == 'M':
@@ -25,7 +26,6 @@ def class_conversion(lines):
 
 
 def data_scaling(lines):
-    lines = lines[1:]
 
     data = [line.split() for line in lines]
     array = np.array(data)

@@ -1,20 +1,15 @@
-from data_preparation import load_file, class_conversion, data_scaling, splitting_into_training_and_test
-from histogram_generation import generate_all_histograms
+
+from neural_network import gradient_descend, initialize_data
 
 
 def main():
-    lines = load_file('crabs.dat')
-    lines_converted = class_conversion(lines)
-    data_array = data_scaling(lines_converted)
-    print(data_array[100])
-    print(data_array.shape)
-    print(data_array.size)
-    training_data, test_data = splitting_into_training_and_test(data_array)
-    print(training_data.shape)
-    print(test_data.shape)
-    print(training_data)
-    print(test_data.shape)
-    print(test_data)
+    y_data_train, x_data_train, y_data_test, x_data_test = initialize_data('crabs.dat')
+
+    weights_hidden, weights_output = gradient_descend(x_data_train, y_data_train, 500, 0.01, 5, 5, 4)
+
+    print(weights_hidden)
+    print(weights_output)
+
 
 if __name__ == '__main__':
     main()
