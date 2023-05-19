@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler
 
 
 def load_file(file_name):
@@ -26,18 +27,17 @@ def class_conversion(lines):
 
 
 def data_scaling(lines):
-
     data = [line.split() for line in lines]
     array = np.array(data)
     columns_to_remove = [4, 5, 6]
     array = np.delete(array, columns_to_remove, axis=1)
-    numeric_columns = [4, 5, 6, 7, 8]
     array = array.astype(np.float64)
+    numeric_columns = array[:, [4, 5, 6, 7, 8]]
 
-    for col in numeric_columns:
-        min_val = np.min(array[:, col])
-        max_val = np.max(array[:, col])
-        array[:, col] = (array[:, col] - min_val) / (max_val - min_val) * 2 - 1
+    scaler = MinMaxScaler(feature_range=(-1, 1))
+    scaler.fit(numeric_columns)
+    scaled_columns = scaler.transform(numeric_columns)
+    array[:, [4, 5, 6, 7, 8]] = scaled_columns
 
     return array
 
