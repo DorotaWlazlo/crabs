@@ -63,15 +63,30 @@ def gradient_descend(net_input, y_data, iterations, ni, n_input, n_hidden, n_out
             print("Iteration: ", i)
             print("Accuracy: ", get_accuracy(get_predictions(output_output), y_data))
 
-    print(output_output)
-    print(y_data)
+    # print(output_output)
+    # print(y_data)
     return weights_hidden, weights_output
 
 
-def get_predictions(output_output):
-    return np.where(output_output < 0, 0, 1)
+# def get_predictions(output_output):
+#     return np.where(output_output < 0, 0, 1)
+#
+#
+# def get_accuracy(predictions, y_data):
+#     return np.sum(predictions == y_data)/y_data.size
 
+def get_accuracy(predictions, Y):
+    return np.sum(np.all(predictions == Y, axis=0)) / Y.shape[1]
 
-def get_accuracy(predictions, y_data):
-    return np.sum(predictions == y_data)/y_data.size
+# def get_predictions(A2):
+#     return np.argmax(A2, 0)
+
+def get_predictions(A2):
+    vector = np.argmax(A2, 0)
+    num_columns = len(vector)
+    predictions = np.zeros((4, num_columns))
+
+    for i, index in enumerate(vector):
+        predictions[index, i] = 1
+    return predictions
 
