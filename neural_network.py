@@ -37,11 +37,16 @@ def forward_propagation(weights_hidden, weights_output, net_input):
     return hidden_activation, hidden_output, output_activation, output_output
 
 
+def tanh_derivative(x):
+    tanh_x = np.tanh(x)
+    derivative = 1 - np.power(tanh_x, 2)
+    return derivative
+
+
 def backward_propagation(net_input, hidden_activation, hidden_output, output_activation,
                          output_output, y_data, weights_hidden, weights_output, ni):
-
-    error_output = (y_data - output_output)*(1 - np.tanh(output_activation) ** 2)
-    error_hidden = (1 - np.tanh(hidden_activation) ** 2)*(weights_output.T.dot(error_output))
+    error_output = (y_data - output_output) * tanh_derivative(output_activation)
+    error_hidden = tanh_derivative(hidden_activation) * (weights_output.T.dot(error_output))
 
     weights_output += ni * error_output.dot(hidden_output.T)
     weights_hidden += ni * error_hidden.dot(net_input.T)
@@ -55,17 +60,18 @@ def gradient_descend(net_input, y_data, iterations, ni, n_input, n_hidden, n_out
     for i in range(iterations):
         hidden_activation, hidden_output, output_activation, output_output = \
             forward_propagation(weights_hidden, weights_output, net_input)
-        weights_hidden, weights_output = \
-            backward_propagation(net_input, hidden_activation, hidden_output, output_activation,
-                                 output_output, y_data, weights_hidden, weights_output, ni)
+        weights_hidden, weights_output = backward_propagation(net_input, hidden_activation, hidden_output,
+                                                              output_activation, output_output, y_data, weights_hidden,
+                                                              weights_output, ni)
 
         if i % 10 == 0:
             print("Iteration: ", i)
             print("Accuracy: ", get_accuracy(get_predictions(output_output), y_data))
 
+    return weights_hidden, weights_output
+
     # print(output_output)
     # print(y_data)
-    return weights_hidden, weights_output
 
 
 # def get_predictions(output_output):
@@ -78,6 +84,7 @@ def gradient_descend(net_input, y_data, iterations, ni, n_input, n_hidden, n_out
 def get_accuracy(predictions, y_data):
     return np.sum(np.all(predictions == y_data, axis=0)) / y_data.shape[1]
 
+
 # def get_predictions(A2):
 #     return np.argmax(A2, 0)
 
@@ -89,4 +96,3 @@ def get_predictions(output_output):
     for i, index in enumerate(maxes):
         predictions[index, i] = 1
     return predictions
-
