@@ -59,15 +59,17 @@ def gradient_descend(net_input, y_data, iterations, ni, n_input, n_hidden, n_out
             backward_propagation(net_input, hidden_activation, hidden_output, output_activation,
                                  output_output, y_data, weights_hidden, weights_output, ni)
 
-        if i % 50 == 0:
+        if i % 10 == 0:
             print("Iteration: ", i)
             print("Accuracy: ", get_accuracy(get_predictions(output_output), y_data))
 
+    print(output_output)
+    print(y_data)
     return weights_hidden, weights_output
 
 
 def get_predictions(output_output):
-    return np.argmax(output_output, 0)
+    return np.where(output_output < 0, 0, 1)
 
 
 def get_accuracy(predictions, y_data):
