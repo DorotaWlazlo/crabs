@@ -75,14 +75,14 @@ def gradient_descend(net_input, y_data, iterations, ni, n_input, n_hidden, n_out
 # def get_accuracy(predictions, y_data):
 #     return np.sum(predictions == y_data)/y_data.size
 
-def get_accuracy(predictions, Y):
-    return np.sum(np.all(predictions == Y, axis=0)) / Y.shape[1]
+def get_accuracy(predictions, y_data):
+    return np.sum(np.all(predictions == y_data, axis=0)) / y_data.shape[1]
 
 # def get_predictions(A2):
 #     return np.argmax(A2, 0)
 
-def get_predictions(A2):
-    maxes = np.argmax(A2, 0)
+def get_predictions(output_output):
+    maxes = np.argmax(output_output, 0)
     num_columns = len(maxes)
     predictions = np.zeros((4, num_columns))
 
