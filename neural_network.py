@@ -82,11 +82,11 @@ def get_accuracy(predictions, Y):
 #     return np.argmax(A2, 0)
 
 def get_predictions(A2):
-    vector = np.argmax(A2, 0)
-    num_columns = len(vector)
+    maxes = np.argmax(A2, 0)
+    num_columns = len(maxes)
     predictions = np.zeros((4, num_columns))
 
-    for i, index in enumerate(vector):
+    for i, index in enumerate(maxes):
         predictions[index, i] = 1
     return predictions
 
