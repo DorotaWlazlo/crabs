@@ -13,7 +13,7 @@ def main():
     sensitivity = calculate_sensitivity(confusion_matrix)
     print(f'Sensitivity of each class: {sensitivity}')
     specificity = calculate_specificity(confusion_matrix)
-    print(f'Sensitivity of each class: {specificity}')
+    print(f'Specificity of each class: {specificity}')
     plt.plot(iterations, accuracies)
     plt.xlabel('Iterations')
     plt.ylabel('Accuracy')
