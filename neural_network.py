@@ -54,10 +54,12 @@ def backward_propagation(net_input, hidden_activation, hidden_output, output_act
     return weights_hidden, weights_output
 
 
-def gradient_descend(net_input, y_data, iterations, ni, n_input, n_hidden, n_output):
+def gradient_descend(net_input, y_data, num_iterations, ni, n_input, n_hidden, n_output):
     weights_hidden, weights_output = initialize_network(n_input, n_hidden, n_output)
+    accuracies = []
+    iterations = []
 
-    for i in range(iterations):
+    for i in range(num_iterations):
         hidden_activation, hidden_output, output_activation, output_output = \
             forward_propagation(weights_hidden, weights_output, net_input)
         weights_hidden, weights_output = backward_propagation(net_input, hidden_activation, hidden_output,
@@ -66,27 +68,17 @@ def gradient_descend(net_input, y_data, iterations, ni, n_input, n_hidden, n_out
 
         if i % 10 == 0:
             print("Iteration: ", i)
-            print("Accuracy: ", get_accuracy(get_predictions(output_output), y_data))
+            accuracy = get_accuracy(get_predictions(output_output), y_data)
+            print("Accuracy: ", accuracy)
+            accuracies.append(accuracy)
+            iterations.append(i)
 
-    return weights_hidden, weights_output
+    return weights_hidden, weights_output, accuracies, iterations
 
-    # print(output_output)
-    # print(y_data)
-
-
-# def get_predictions(output_output):
-#     return np.where(output_output < 0, 0, 1)
-#
-#
-# def get_accuracy(predictions, y_data):
-#     return np.sum(predictions == y_data)/y_data.size
 
 def get_accuracy(predictions, y_data):
     return np.sum(np.all(predictions == y_data, axis=0)) / y_data.shape[1]
 
-
-# def get_predictions(A2):
-#     return np.argmax(A2, 0)
 
 def get_predictions(output_output):
     maxes = np.argmax(output_output, 0)
@@ -96,3 +88,62 @@ def get_predictions(output_output):
     for i, index in enumerate(maxes):
         predictions[index, i] = 1
     return predictions
+
+
+def check_class(code):
+    first_class = np.array([1, 0, 0, 0])
+
+    second_class = np.array([0, 1, 0, 0])
+
+    third_class = np.array([0, 0, 1, 0])
+
+    fourth_class = np.array([0, 0, 0, 1])
+
+    if np.array_equal(code, first_class):
+        return 0
+    if np.array_equal(code, second_class):
+        return 1
+    if np.array_equal(code, third_class):
+        return 2
+    if np.array_equal(code, fourth_class):
+        return 3
+
+
+def test_predictions(weights_hidden, weights_output,y_data_test, x_data_test):
+    _, _, _, output_output = forward_propagation(weights_hidden, weights_output, x_data_test)
+    predictions = get_predictions(output_output)
+    accuracy = get_accuracy(predictions, y_data_test)
+    confusion_matrix = np.zeros((4, 4))
+
+    for i in range(y_data_test.shape[1]):
+        x = check_class(y_data_test[:, i])
+        y = check_class(predictions[:, i])
+        confusion_matrix[x][y] += 1
+
+    return accuracy, confusion_matrix
+
+
+def calculate_sensitivity(confusion_matrix):
+    num_classes = confusion_matrix.shape[0]
+    sensitivities = np.zeros(num_classes)
+
+    for i in range(num_classes):
+        true_positives = confusion_matrix[i, i]
+        false_negatives = np.sum(confusion_matrix[i, :]) - true_positives
+        sensitivities[i] = true_positives / (true_positives + false_negatives)
+
+    return sensitivities
+
+
+def calculate_specificity(confusion_matrix):
+    num_classes = confusion_matrix.shape[0]
+    specificities = np.zeros(num_classes)
+
+    for i in range(num_classes):
+        true_negatives = np.sum(confusion_matrix) - np.sum(confusion_matrix[i, :]) - np.sum(confusion_matrix[:, i]) + \
+                         confusion_matrix[i, i]
+        false_positives = np.sum(confusion_matrix[:, i]) - confusion_matrix[i, i]
+        specificities[i] = true_negatives / (true_negatives + false_positives)
+
+    return specificities
+
